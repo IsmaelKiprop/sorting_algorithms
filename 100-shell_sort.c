@@ -3,16 +3,16 @@
 /**
 * knuth_seq - gaps with knuth sequence
 * @size: array
-* Return: array
+* Return: array holding gaps
 */
 size_t knuth_seq(size_t size)
 {
-	size_t u, p;
+	size_t y, z;
 	size_t largst_gap;
 
-	for (u = 1, p = 0; u < size; u = u * 3 + 1, p++)
+	for (y = 1, z = 0; y < size; y = y * 3 + 1, z++)
 	{
-		largst_gap = u;
+		largst_gap = y;
 	}
 	return (largst_gap);
 }
@@ -36,7 +36,7 @@ void shell_sort(int *array, size_t size)
 	gap = knuth_seq(size);
 	for (x = gap; x > 0; x = (x - 1) / 3)
 	{
-		for (y = i; y < size; y++)
+		for (y = x; y < size; y++)
 		{
 			tmp = array[y];
 			for (z = y; (z >= x) && (array[z - x] > tmp); z -= x)
