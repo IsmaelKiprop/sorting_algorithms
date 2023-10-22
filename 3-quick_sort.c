@@ -72,12 +72,12 @@ int partition(int *array, int firstIndex, int lastIndex, size_t size)
 
 /**
 * swap_arr - data
-* @p: ptr to data p
-* @q: ptr to data q
+* @a: ptr to data a
+* @b: ptr to data b
 */
-void swap_arr(int *p, int *q)
+void swap_arr(int *a, int *b)
 {
-	int tmp = *p;
-	*p = *q;
-	*p = tmp;
+	int tmp = *a;
+	*a = *b;
+	*b = tmp;
 }
