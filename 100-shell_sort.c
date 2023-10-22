@@ -1,18 +1,18 @@
 #include "sort.h"
 
 /**
-* knuth_seq - Get gaps with knuth sequence
-* @size: size of array
+* knuth_seq - gaps with knuth sequence
+* @size: array
 * Return: array holding gaps
 */
 size_t knuth_seq(size_t size)
 {
-	size_t i, j;
+	size_t y, z;
 	size_t largst_gap;
 
-	for (i = 1, j = 0; i < size; i = i * 3 + 1, j++)
+	for (y = 1, z = 0; y < size; y = y * 3 + 1, z++)
 	{
-		largst_gap = i;
+		largst_gap = y;
 	}
 	return (largst_gap);
 }
