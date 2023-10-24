@@ -1,36 +1,78 @@
 #include "sort.h"
-#include <stdio.h>
+void swap_bitonic(int *arr, int a, int b);
+void recBitonicSort(int *arr, int lo, int cnt, int dir, size_t n);
+void bitonicMerge(int *arr, int lo, int cnt, int dir, size_t n);
 
-void swap(int *a, int *b) {
-    int temp = *a;
-    *a = *b;
-    *b = temp;
+
+/**
+ * bitonic_sort - sort bitonic sort algm
+ * @array: sort
+ * @size: array
+ */
+void bitonic_sort(int *array, size_t size)
+{
+	recBitonicSort(array, 0, size, 1, size);
 }
 
-void bitonic_merge(int *array, size_t size, size_t low, size_t cnt, int dir) {
-    if (cnt > 1) {
-        size_t k = cnt / 2;
-        for (size_t i = low; i < low + k; i++) {
-            if ((array[i] > array[i + k]) == dir) {
-                swap(&array[i], &array[i + k]);
-                printf("Merging [%lu/%lu] (%s):\n", cnt, size, dir == 1 ? "UP" : "DOWN");
-                print_array(array, size);
-            }
-        }
-        bitonic_merge(array, size, low, k, dir);
-        bitonic_merge(array, size, low + k, k, dir);
-    }
+/**
+ * swap_bitonic - swap value of array element
+ * @arr: array
+ * @x: index nod array to swap data
+ * @y: index nod array to swap data
+ */
+void swap_bitonic(int *arr, int x, int y)
+{
+	int w;
+
+	w = arr[x];
+	arr[x] = arr[y];
+	arr[y] = w;
 }
 
-void bitonic_sort_recursive(int *array, size_t size, int dir) {
-    if (size > 1) {
-        size_t half = size / 2;
-        bitonic_sort_recursive(array, half, 1);
-        bitonic_sort_recursive(array + half, half, 0);
-        bitonic_merge(array, size, 0, size, dir);
-    }
+/**
+ * bitonicMerge - swap merge splitted array
+ * @arr: array
+ * @lo: index
+ * @cnt: index
+ * @dir: 1 for ascending swapping 0 for descending
+ */
+void bitonicMerge(int *arr, int lo, int cnt, int dir, size_t n)
+{
+	int v, u;
+
+	if (cnt > 1)
+	{
+		u = cnt / 2;
+		for (v = lo; v < lo + u; v++)
+		{
+			if (dir == (arr[v] > arr[v + u]))
+			{
+				swap_bitonic(arr, v, v + u);
+				print_array(arr, n);
+			}
+		}
+		bitonicMerge(arr, lo, u, dir, n);
+		bitonicMerge(arr, lo + u, u, dir, n);
+	}
 }
 
-void bitonic_sort(int *array, size_t size) {
-    bitonic_sort_recursive(array, size, 1);
+/**
+ * recBitonicSort - split sort recursively
+ * @arr: array
+ * @lo: index
+ * @cnt: index
+ * @dir: 1 for ascending swapping 0 for descending
+ * @n: array size
+ */
+void recBitonicSort(int *arr, int lo, int cnt, int dir, size_t n)
+{
+	int u;
+
+	if (cnt > 1)
+	{
+		u = cnt / 2;
+		recBitonicSort(arr, lo, u, 1, n);
+		recBitonicSort(arr, lo + u, u, 0, n);
+		bitonicMerge(arr, lo, cnt, dir, n);
+	}
 }
