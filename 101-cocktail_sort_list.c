@@ -1,98 +1,139 @@
 #include "sort.h"
 
-void cocktail_sort_list(listint_t **list);
-void swap_node_ahead(listint_t **list, listint_t **tail, listint_t **shaker);
-void swap_node_behind(listint_t **list, listint_t **tail, listint_t **shaker);
-
 /**
- * swap_node_ahead - swp node in  listint_t doubly-linked list
- *                   list of int with the node ahead of it.
- * @list: a ptr to the head of a doubly-linked list of integers.
- * @tail: a ptr to the tail of the doubly-linked list.
- * @shaker:  ptr to the current swapping node of the cocktail shaker algo.
- */
-void swap_node_ahead(listint_t **list, listint_t **tail, listint_t **shaker)
-{
-	listint_t *tmp = (*shaker)->next;
+* cocktail_sort_list - sort using cocktail algm
+* @list: sort
+*/
 
-	if ((*shaker)->prev != NULL)
-		(*shaker)->prev->next = tmp;
-	else
-		*list = tmp;
-	tmp->prev = (*shaker)->prev;
-	(*shaker)->next = tmp->next;
-	if (tmp->next != NULL)
-		tmp->next->prev = *shaker;
-	else
-		*tail = *shaker;
-	(*shaker)->prev = tmp;
-	tmp->next = *shaker;
-	*shaker = tmp;
-}
-
-/**
- * swap_node_behind - swp  node  listint_t doubly-linked
- *                    list of integers with the node behind it.
- * @list: A pointer to the head of a doubly-linked list of integers.
- * @tail: A pointer to the tail of the doubly-linked list.
- * @shaker: ptr to the current swapping node of the cocktail shaker algo.
- */
-void swap_node_behind(listint_t **list, listint_t **tail, listint_t **shaker)
-{
-	listint_t *tmp = (*shaker)->prev;
-
-	if ((*shaker)->next != NULL)
-		(*shaker)->next->prev = tmp;
-	else
-		*tail = tmp;
-	tmp->next = (*shaker)->next;
-	(*shaker)->prev = tmp->prev;
-	if (tmp->prev != NULL)
-		tmp->prev->next = *shaker;
-	else
-		*list = *shaker;
-	(*shaker)->next = tmp;
-	tmp->prev = *shaker;
-	*shaker = tmp;
-}
-
-/**
- * cocktail_sort_list - sort a listint_t doubly-linked list of integers in
- *                      asc order using the cocktail shaker algorithm.
- * @list: ptr to the head of a listint_t doubly-linked list.
- */
 void cocktail_sort_list(listint_t **list)
 {
-	listint_t *tail, *shaker;
-	bool shaken_not_stirred = false;
-
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
+	if ((list == NULL) || (*list == NULL) || ((*list)->next == NULL))
 		return;
 
-	for (tail = *list; tail->next != NULL;)
-		tail = tail->next;
+	cocktailSort(list, 0);
+	while ((*list)->prev != NULL)
+		*list = (*list)->prev;
+}
 
-	while (shaken_not_stirred == false)
+/**
+* cocktailSort - sort using cocktail algm
+* @list: ptr nod to sorted
+* @direction: direction sort - left right = 0
+* right to left = 1
+*/
+void cocktailSort(listint_t **list, int direction)
+{
+	listint_t *tmp, *val;
+	int swapped = 0;
+
+	if (direction == 0)
 	{
-		shaken_not_stirred = true;
-		for (shaker = *list; shaker != tail; shaker = shaker->next)
+		tmp = *list;
+		while (tmp)
 		{
-			if (shaker->n > shaker->next->n)
+			if ((tmp->next != NULL) && (tmp->n > tmp->next->n))
 			{
-				swap_node_ahead(list, &tail, &shaker);
-				print_list((const listint_t *)*list);
-				shaken_not_stirred = false;
+				val = tmp;
+				swap(&tmp);
+				swapped = 1;
 			}
+			else
+				tmp = tmp->next;
 		}
-		for (shaker = shaker->prev; shaker != *list;
-				shaker = shaker->prev)
-		{
-			if (shaker->n < shaker->prev->n)
-			{
-				swap_node_behind(list, &tail, &shaker);
-				print_list((const listint_t *)*list);
-				shaken_not_stirred = false;
-			}
-		}
+		if (swapped != 0)
+			cocktailSort(&val->prev, 1);
 	}
+	else
+	{
+		tmp = *list;
+
+		while (tmp && (tmp->prev != NULL))
+		{
+			if (tmp->n < tmp->prev->n)
+			{
+				val = tmp;
+				swap_back(&tmp);
+				swapped = 1;
+			}
+			else
+				tmp = tmp->prev;
+		}
+		if (swapped != 0)
+			cocktailSort(&val->next, 0);
+	}
+}
+
+/**
+* swap - swap node list forward
+* @top: ptr node swap
+*/
+
+void swap(listint_t **top)
+{
+	listint_t *tmp, *val;
+
+	if (*top == NULL || top == NULL)
+		return;
+
+	tmp = *top;
+	val = tmp->next;
+	if (*top != NULL)
+	{
+		if (tmp->prev != NULL)
+		{
+			val->prev = tmp->prev;
+			tmp->prev->next = val;
+		}
+		else
+			val->prev = NULL;
+		tmp->prev = val;
+		if (val->next == NULL)
+			tmp->next = NULL;
+		else
+		{
+			tmp->next = val->next;
+			val->next->prev = tmp;
+		}
+		val->next = tmp;
+	}
+	while (tmp->prev != NULL)
+		tmp = tmp->prev;
+	print_list(tmp);
+}
+
+/**
+* swap_back - swap node list backward
+* @top: ptr nod swap
+*/
+
+void swap_back(listint_t **top)
+{
+	listint_t *tmp, *val;
+
+	if (*top == NULL || top == NULL)
+		return;
+	tmp = *top;
+	val = tmp->prev;
+	if (val != NULL)
+	{
+		if (tmp->next != NULL)
+		{
+			val->next = tmp->next;
+			tmp->next->prev = val;
+		}
+		else
+			val->next = NULL;
+		tmp->next = val;
+		if (val->prev == NULL)
+			tmp->prev = NULL;
+		else
+		{
+			tmp->prev = val->prev;
+			val->prev->next = tmp;
+		}
+		val->prev = tmp;
+	}
+	while (tmp->prev != NULL)
+		tmp = tmp->prev;
+	print_list(tmp);
 }
