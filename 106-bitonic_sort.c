@@ -5,9 +5,9 @@ void bitonicMerge(int *arr, int lo, int cnt, int dir, size_t n);
 
 
 /**
- * bitonic_sort - using bitonic sort algorithm
- * @array:  sort
- * @size:  array
+ * bitonic_sort - sort bitonic sort algm
+ * @array: sort
+ * @size: array
  */
 void bitonic_sort(int *array, size_t size)
 {
@@ -15,22 +15,22 @@ void bitonic_sort(int *array, size_t size)
 }
 
 /**
- * swap_bitonic - swap value of array elements
+ * swap_bitonic - swap value of array element
  * @arr: array
- * @i: node in array to swap data
- * @j: node in array to swap data
+ * @x: index nod array to swap data
+ * @y: index nod array to swap data
  */
-void swap_bitonic(int *arr, int i, int j)
+void swap_bitonic(int *arr, int x, int y)
 {
-	int t;
+	int w;
 
-	t = arr[i];
-	arr[i] = arr[j];
-	arr[j] = t;
+	w = arr[x];
+	arr[x] = arr[y];
+	arr[y] = w;
 }
 
 /**
- * bitonicMerge - swap and merge splitted part of array
+ * bitonicMerge - swap merge splitted array
  * @arr: array
  * @lo: index
  * @cnt: index
@@ -38,41 +38,41 @@ void swap_bitonic(int *arr, int i, int j)
  */
 void bitonicMerge(int *arr, int lo, int cnt, int dir, size_t n)
 {
-	int i, k;
+	int v, u;
 
 	if (cnt > 1)
 	{
-		k = cnt / 2;
-		for (i = lo; i < lo + k; i++)
+		u = cnt / 2;
+		for (v = lo; v < lo + u; v++)
 		{
-			if (dir == (arr[i] > arr[i + k]))
+			if (dir == (arr[v] > arr[v + u]))
 			{
-				swap_bitonic(arr, i, i + k);
+				swap_bitonic(arr, v, v + u);
 				print_array(arr, n);
 			}
 		}
-		bitonicMerge(arr, lo, k, dir, n);
-		bitonicMerge(arr, lo + k, k, dir, n);
+		bitonicMerge(arr, lo, u, dir, n);
+		bitonicMerge(arr, lo + u, u, dir, n);
 	}
 }
 
 /**
- * recBitonicSort - split and sort recursively
+ * recBitonicSort - split sort recursively
  * @arr: array
- * @lo:  index
+ * @lo: index
  * @cnt: index
  * @dir: 1 for ascending swapping 0 for descending
- * @n: size  array
+ * @n: array size
  */
 void recBitonicSort(int *arr, int lo, int cnt, int dir, size_t n)
 {
-	int k;
+	int u;
 
 	if (cnt > 1)
 	{
-		k = cnt / 2;
-		recBitonicSort(arr, lo, k, 1, n);
-		recBitonicSort(arr, lo + k, k, 0, n);
+		u = cnt / 2;
+		recBitonicSort(arr, lo, u, 1, n);
+		recBitonicSort(arr, lo + u, u, 0, n);
 		bitonicMerge(arr, lo, cnt, dir, n);
 	}
 }
